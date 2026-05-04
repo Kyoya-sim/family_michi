@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>申し込みページへ移動しています...</p>
+
+  <script>
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbxxxxxx/exec";
+
+    async function redirectToForm() {
+      try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+          throw new Error("API request failed");
+        }
+
+        const data = await response.json();
+
+        if (!data.success || !data.url) {
+          throw new Error("Invalid response");
+        }
+
+        // リダイレクト
+        window.location.replace(data.url);
+
+      } catch (error) {
+        console.error(error);
+
+        document.body.innerHTML = `
+          <h2>申し込みページを開けませんでした</h2>
+          <p>しばらくしてから再度アクセスしてください。</p>
+        `;
+      }
+    }
+
+    redirectToForm();
+  </script>
+</body>
+</html>
