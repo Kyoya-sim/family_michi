@@ -2,22 +2,27 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-
   <title>Redirecting...</title>
-
-  <meta
-    http-equiv="refresh"
-    content="0; url=https://script.google.com/macros/s/AKfycbxqYoHt2QqAXDQG6MKaTfm9yJ1Id-CVF5locxjYsBAO2GW5zbyddzOPdFqqblwRFI_QEw/exec"
-  >
 </head>
-
 <body>
-  <script>
-    window.location.replace(
-      "https://script.google.com/macros/s/AKfycbxqYoHt2QqAXDQG6MKaTfm9yJ1Id-CVF5locxjYsBAO2GW5zbyddzOPdFqqblwRFI_QEw/exec"
-    );
-  </script>
-
   <p>申し込みページへ移動しています...</p>
+
+  <script>
+    async function redirectToForm() {
+	  const gasUrl = "https://script.google.com/macros/s/AKfycbyR-ZElF9ke6hFijlkjZbmtqvmyBum3vlRMg4t60ezoLOXu0EZq9MJCZOSnF4ws12dE8Q/exec";
+	  
+	  try {
+	    const response = await fetch(gasUrl);
+	    const data = await response.json();
+	    if (data.url) {
+	      window.location.href = data.url;
+	    }
+	  } catch (error) {
+	    console.error("読み込みエラー:", error);
+	    document.body.innerText = "フォームの読み込みに失敗しました。";
+	  }
+	}
+	redirectToForm();
+  </script>
 </body>
 </html>
