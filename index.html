@@ -9,6 +9,8 @@
 
   <script>
     function handleResponse(data) {
+      console.log("response", data);
+
       if (data.success && data.url) {
         window.location.replace(data.url);
       } else {
@@ -26,9 +28,12 @@
     const script = document.createElement("script");
 
     script.src =
-      "https://script.google.com/macros/s/AKfycbxYAD2HdEFg2hf3P0aNcT14EDX5d4WP-b89bBW-5nG9GVHYT2vjOOda5wz3uDPh5JD8sg/exec";
+      "https://script.google.com/macros/s/AKfycbxYAD2HdEFg2hf3P0aNcT14EDX5d4WP-b89bBW-5nG9GVHYT2vjOOda5wz3uDPh5JD8sg/exec?callback=handleResponse";
 
-    script.onerror = showError;
+    script.onerror = function(e) {
+      console.error("script load error", e);
+      showError();
+    };
 
     document.body.appendChild(script);
   </script>
