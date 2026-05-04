@@ -1,27 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+    <meta charset="UTF-8">
     <title>Redirecting...</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; color: #333; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
     <script>
-        function handleResponse(data) {
-            if (data && data.url) {
-                window.location.href = data.url;
-            } else {
-                document.body.innerText = "URLの取得に失敗しました。";
-            }
-        }
+        async function startRedirect() {
+            const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHLubtV8zqZlXdZ-tDnv3n7qGJbl84yJ0FxuwI53SHgfqDOhm8yeaCblXrZ8nfF41Xd604W2S3uJ9e/pub?gid=0&single=true&output=csv";
+            const targetName = "Family道フォーム";
 
-        function startRedirect() {
-            const gasUrl = "https://script.google.com/macros/s/AKfycbwATn9kZ-6y4ZuyTz71aq0aCtTi_r9d1Y21-rFBe9g5C5-es8VUr6uEhuirRoM-SyTo/exec"; 
-            const script = document.createElement('script');
-            script.src = gasUrl + "?callback=handleResponse";
-            document.head.appendChild(script);
+            try {
+                const response = await fetch(csvUrl);
+                if (!response.ok) throw new Error('シートの取得に失敗しました');
+                
+                const csvData = await response.text();
+                const lines = csvData.split(/\r?\n/);
+                
+                let redirectUrl = "";
+
+                for (let i = 0; i < lines.length; i++) {
+                    const columns = lines[i].split(',');
+                    if (columns[0].trim() === targetName) {
+                        redirectUrl = columns[1].trim();
+                        break;
+                    }
+                }
+
+                if (redirectUrl && redirectUrl.startsWith('http')) {
+                    window.location.replace(redirectUrl);
+                } else {
+                    throw new Error('有効なURLが見つかりませんでした');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').innerHTML = 
+                    "URLの取得に失敗しました。<br>スプレッドシートの「対象」が「" + targetName + "」になっているか確認してください。";
+            }
         }
 
         window.onload = startRedirect;
     </script>
 </head>
 <body>
-    <p>フォームへ移動しています。少々お待ちください...</p>
+    <div class="loader"></div>
+    <p id="message">フォームへ移動しています。少々お待ちください...</p>
 </body>
 </html>
