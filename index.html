@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
+    <title>Redirecting...</title>
+    <script>
+        function handleResponse(data) {
+            if (data && data.url) {
+                window.location.href = data.url;
+            } else {
+                document.body.innerText = "URLの取得に失敗しました。";
+            }
+        }
+
+        function startRedirect() {
+            const gasUrl = "https://script.google.com/macros/s/AKfycbwATn9kZ-6y4ZuyTz71aq0aCtTi_r9d1Y21-rFBe9g5C5-es8VUr6uEhuirRoM-SyTo/exec"; 
+            const script = document.createElement('script');
+            script.src = gasUrl + "?callback=handleResponse";
+            document.head.appendChild(script);
+        }
+
+        window.onload = startRedirect;
+    </script>
 </head>
 <body>
-  <p>申し込みページへ移動しています...</p>
-
-  <script>
-    async function redirectToForm() {
-	  const gasUrl = "https://script.google.com/macros/s/AKfycbyR-ZElF9ke6hFijlkjZbmtqvmyBum3vlRMg4t60ezoLOXu0EZq9MJCZOSnF4ws12dE8Q/exec";
-	  
-	  try {
-	    const response = await fetch(gasUrl);
-	    const data = await response.json();
-	    if (data.url) {
-	      window.location.href = data.url;
-	    }
-	  } catch (error) {
-	    console.error("読み込みエラー:", error);
-	    document.body.innerText = "フォームの読み込みに失敗しました。";
-	  }
-	}
-	redirectToForm();
-  </script>
+    <p>フォームへ移動しています。少々お待ちください...</p>
 </body>
 </html>
